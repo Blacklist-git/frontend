@@ -9,6 +9,7 @@ const Check = () => {
   const [selectedOption, setSelectedOption] = useState("website"); // 기본값 설정
   // const [dataSend, setDataSend] = useState<File | string>("empity");
   const [dataSend, setDataSend] = useState<FormData | string>("empty");
+  const [selectedFileName, setSelectedFileName] = useState("");
 
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // 입력 필드의 값이 변경될 때 호출되는 함수
@@ -21,6 +22,8 @@ const Check = () => {
       const formData = new FormData();
       formData.append("file", data);
       setDataSend(formData);
+
+      setSelectedFileName(data.name);
     }
   };
 

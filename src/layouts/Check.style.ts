@@ -92,7 +92,7 @@ export const file = styled.input.attrs({
   type: "file",
 })`
   width: 83%;
-  height: 92%;
+  height: 100%;
   &::-webkit-file-upload-button {
     width: 100%;
     height: 100%;
