@@ -43,11 +43,11 @@ const Check = () => {
       }
       return false;
     }
-    // if (selectedOption == "csv" && placeholder[-4] != ".csv") {
-    //   console.log(placeholder[-4]);
-    //   alert("csv파일만 업로드해주세요.");
-    //   return false;
-    // }
+    if (selectedOption == "csv" && placeholder.toString().slice(-4) != ".csv") {
+      console.log(placeholder.toString().slice(-4));
+      alert("csv파일만 업로드해주세요.");
+      return false;
+    }
     // alert(typeof dataSend);
     var dataType = {};
     var apiUrlType = ``;
