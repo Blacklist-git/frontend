@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 export const body = styled.div`
   top: 0;
   left: 0;
@@ -18,8 +17,8 @@ export const SignUp = styled.div`
   align-items: center;
 `;
 export const Title = styled.div`
-  font-size: 2.8rem;
   font-weight: bold;
+  font-size: 2.8rem;
   a {
     text-decoration: none;
     color: white;
@@ -42,6 +41,16 @@ export const input = styled.input`
   border: none;
   padding-left: 2%;
   color: #b1b1b1;
+
+  &::placeholder {
+    color: #ccc;
+  }
+  &::-webkit-input-placeholder {
+    color: #ccc;
+  }
+  &:-ms-input-placeholder {
+    color: #ccc;
+  }
 `;
 
 export const inputEmail = styled.input`
@@ -53,6 +62,15 @@ export const inputEmail = styled.input`
   margin-right: 1%;
   color: #b1b1b1;
   padding-left: 2%;
+  &::placeholder {
+    color: #ccc;
+  }
+  &::-webkit-input-placeholder {
+    color: #ccc;
+  }
+  &:-ms-input-placeholder {
+    color: #ccc;
+  }
 `;
 export const selectEmail = styled.select`
   height: 90%;

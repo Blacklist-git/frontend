@@ -88,23 +88,25 @@ export const resultBtn = styled.button`
   }
 `;
 
-export const file = styled.input.attrs({
+export const fileUpload = styled.input.attrs({
   type: "file",
 })`
+  display: none;
+`;
+
+export const file = styled.label`
+  display: flex;
   width: 83%;
   height: 100%;
-  &::-webkit-file-upload-button {
-    width: 100%;
-    height: 100%;
-    border-radius: 15px 0px 0px 15px;
-    padding-left: 2%;
-    border: none;
-    font-size: 1rem;
-    background-color: white;
-    text-align: left;
-    &:hover {
-      background-color: grey;
-      color: white;
-    }
+  border-radius: 15px 0px 0px 15px;
+  padding-left: 2%;
+  border: none;
+  font-size: 1rem;
+  background-color: white;
+  text-align: left;
+  &:hover {
+    background-color: grey;
+    color: white;
   }
+  align-items: center;
 `;

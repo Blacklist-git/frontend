@@ -9,7 +9,7 @@ const Check = () => {
   const [selectedOption, setSelectedOption] = useState("website"); // 기본값 설정
   // const [dataSend, setDataSend] = useState<File | string>("empity");
   const [dataSend, setDataSend] = useState<FormData | string>("empty");
-  const [selectedFileName, setSelectedFileName] = useState("");
+  const [placeholder, setPlaceholder] = useState("파일을 선택해주세요");
 
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // 입력 필드의 값이 변경될 때 호출되는 함수
@@ -22,8 +22,7 @@ const Check = () => {
       const formData = new FormData();
       formData.append("file", data);
       setDataSend(formData);
-
-      setSelectedFileName(data.name);
+      setPlaceholder(data.name);
     }
   };
 
@@ -44,6 +43,11 @@ const Check = () => {
       }
       return false;
     }
+    // if (selectedOption == "csv" && placeholder[-4] != ".csv") {
+    //   console.log(placeholder[-4]);
+    //   alert("csv파일만 업로드해주세요.");
+    //   return false;
+    // }
     // alert(typeof dataSend);
     var dataType = {};
     var apiUrlType = ``;
@@ -66,8 +70,10 @@ const Check = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // 백엔드에서의 응답 처리
-        localStorage.setItem("myData", JSON.stringify(data));
+        if (selectedOption != "csv") {
+          console.log(data); // 백엔드에서의 응답 처리
+          localStorage.setItem("myData", JSON.stringify(data));
+        }
         navigate("/result");
       })
       .catch((error) => {
@@ -83,7 +89,10 @@ const Check = () => {
           {selectedOption == "csv" ? (
             // "csv"가 선택된 경우
             // <S.csvButton>
-            <S.file onChange={handleDataChange} />
+            <S.file>
+              {placeholder}
+              <S.fileUpload onChange={handleDataChange} />
+            </S.file>
           ) : (
             /* </S.csvButton>  */
             <S.input
@@ -97,7 +106,7 @@ const Check = () => {
             <S.select value={selectedOption} onChange={handleSelectChange}>
               <option value="webstie">웹사이트 검증</option>
               <option value="api">API 분석</option>
-              <option value="csv">csv파일 분석</option>
+              <option value="csv">csv파일 처리</option>
             </S.select>
           </S.inputBtn>
         </S.inputUrl>

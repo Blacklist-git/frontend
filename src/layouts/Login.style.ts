@@ -40,6 +40,15 @@ export const input = styled.input`
   border: none;
   padding-left: 2%;
   color: #b1b1b1;
+  &::placeholder {
+    color: #ccc;
+  }
+  &::-webkit-input-placeholder {
+    color: #ccc;
+  }
+  &:-ms-input-placeholder {
+    color: #ccc;
+  }
 `;
 export const LoginBtn = styled.button`
   width: 72%;

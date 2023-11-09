@@ -23,7 +23,8 @@ const Result = () => {
     const personalData = parsedData.personalData?.split(",");
 
     const url = nameData[1];
-    const nameCount = Number(nameData[2].replace("{", "").replace("}", ""));
+    if (nameData[2]) Number(nameData[2].replace("{", "").replace("}", ""));
+    const nameCount = nameData[2];
     const name = nameData[3]; // 이렇게 해놓으면 이름 하나 밖에 안나옴. 여러 개 검출 되었을 때 어찌할지 생각해야함.
 
     result = (

@@ -16,7 +16,7 @@ const SignUp = () => {
         <S.input placeholder="비밀번호 확인" type="password"></S.input>
         <S.inputName>이메일</S.inputName>
         <S.Email>
-          <S.inputEmail></S.inputEmail>@
+          <S.inputEmail placeholder="이메일을 입력하세요"></S.inputEmail>@
           <S.selectEmail>
             <option value="gmail.com">gamil.com</option>
             <option value="naver.com">naver.com</option>
