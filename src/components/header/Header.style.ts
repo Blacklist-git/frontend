@@ -21,6 +21,7 @@ export const home = styled.div`
     text-decoration: none;
     color: white;
   }
+  z-index: 3;
 `;
 
 export const category = styled.div`
@@ -29,6 +30,9 @@ export const category = styled.div`
     display: flex;
     list-style: none;
     gap: 30px;
+  }
+  li {
+    z-index: 3;
   }
   a {
     text-decoration: none;

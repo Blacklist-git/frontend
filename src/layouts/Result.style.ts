@@ -10,7 +10,7 @@ export const container = styled.div`
   margin-top: 2%;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: none;
   display: flex;
 `;
 
