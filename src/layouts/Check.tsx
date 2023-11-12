@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const Check = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [urlToSend, setUrlToSend] = useState(""); // URL 값을 상태로 관리
   const [selectedOption, setSelectedOption] = useState("website"); // 기본값 설정
   // const [dataSend, setDataSend] = useState<File | string>("empity");
@@ -32,6 +33,7 @@ const Check = () => {
   };
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+    setLoading(true);
     if (
       (selectedOption != "csv" && urlToSend == "") ||
       (selectedOption == "csv" && dataSend == "empity")
@@ -68,16 +70,26 @@ const Check = () => {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
         if (selectedOption != "csv") {
           console.log(data); // 백엔드에서의 응답 처리
           localStorage.setItem("myData", JSON.stringify(data));
+        } else {
+          console.log(data);
+          localStorage.setItem("myData", JSON.stringify(data));
         }
+        setLoading(false);
         navigate("/result");
       })
       .catch((error) => {
         console.error("Error:", error);
+        setLoading(false);
       });
   };
   return (
@@ -110,11 +122,15 @@ const Check = () => {
             </S.select>
           </S.inputBtn>
         </S.inputUrl>
-        <S.resultBtn>
-          <Link to="/result/" onClick={handleFormSubmit}>
-            결과 보기
-          </Link>
-        </S.resultBtn>
+        {loading == true ? (
+          <S.resultBtn>Loading...</S.resultBtn>
+        ) : (
+          <S.resultBtn>
+            <Link to="/confirm" onClick={handleFormSubmit}>
+              결과 보기
+            </Link>
+          </S.resultBtn>
+        )}
       </S.container>
     </S.body>
   );
