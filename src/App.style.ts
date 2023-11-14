@@ -23,8 +23,8 @@ export const Light = styled.div<{
 }>`
   position: absolute;
   opacity: 50%;
-  width: 30%;
-  height: 30%;
+  width: 20%;
+  height: 5%;
   padding-top: 20%;
   background: radial-gradient(
     ellipse at center,
@@ -40,3 +40,4 @@ export const Light = styled.div<{
   left: ${(props) => props.lightPosition.x}px;
   /* z-index: 1; */
 `;
+
