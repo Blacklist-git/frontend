@@ -23,9 +23,9 @@ export const Light = styled.div<{
 }>`
   position: absolute;
   opacity: 50%;
-  width: 20%;
+  width: 10%;
   height: 5%;
-  padding-top: 20%;
+  padding-top: 10%;
   background: radial-gradient(
     ellipse at center,
     ${({ lighted }) =>
@@ -35,7 +35,7 @@ export const Light = styled.div<{
   );
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: top 0.3s, left 0.3s;
+  transition: top 0.2s, left 0.2s;
   top: ${(props) => props.lightPosition.y}px;
   left: ${(props) => props.lightPosition.x}px;
   /* z-index: 1; */

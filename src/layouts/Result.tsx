@@ -2,6 +2,8 @@
 import * as S from "./Result.style";
 import onPdfDownload from "../hook/onPdfDownload";
 import React from "react";
+import reportImg from "../assets/img/reportImage.png";
+
 import {
   Document,
   Page,
@@ -9,23 +11,23 @@ import {
   Text,
   Font,
   StyleSheet,
-  PDFViewer,
+  Image,
+  PDFDownloadLink,
+  pdf,
 } from "@react-pdf/renderer";
 
-// 폰트를 로드합니다
 Font.register({
-  family: "Interop",
-  src: "../fonts/Light.woff",
+  family: "NanumGothic",
+  src: "https://fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.ttf",
 });
 
 const styles = StyleSheet.create({
+  image: { width: "100%", height: "100%", position: "absolute" },
   page: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    //fontFamily: 'Interop',
-  },
-  section: {
-    flexGrow: 1,
+    // flexDirection: "row",
+    // backgroundColor: "#fff",
+    backgroundImage: `url(${reportImg})`,
+    margin: 0,
   },
   // BlackList: {
   //   width: '81vh',
@@ -42,11 +44,15 @@ const styles = StyleSheet.create({
 
   //},
 
-  BlackList: {
-    width: "100%",
-    textAlign: "center",
-    fontSize: "100px",
+  text: {
+    fontSize: 50,
+    left: "0px",
+    right: "0px",
     color: "#000",
+    position: "absolute",
+    marginHorizontal: "auto",
+    justifyContent: "center",
+    fontFamily: "NanumGothic",
   },
 
   // Report: {
@@ -61,95 +67,100 @@ const styles = StyleSheet.create({
 });
 
 const Result = () => {
-  // const data = localStorage.getItem("myData");
-  // var parsedData;
-  // if (data !== null) {
-  //   parsedData = JSON.parse(data);
-  //   // 이제 parsedData는 유효한 JSON 문자열로 파싱됐을 것입니다.
-  // } else {
-  //   console.log("Data not found in localStorage");
-  // }
-  // const date = new Date();
-  // const formattedDate = `${date.getFullYear()}년 ${
-  //   date.getMonth() + 1
-  // }월 ${date.getDate()}일`;
+  const data = localStorage.getItem("myData");
+  var parsedData;
+  if (data !== null) {
+    parsedData = JSON.parse(data);
+    // 이제 parsedData는 유효한 JSON 문자열로 파싱됐을 것입니다.
+  } else {
+    console.log("Data not found in localStorage");
+  }
+  const date = new Date();
+  const formattedDate = `${date.getFullYear()}년 ${
+    date.getMonth() + 1
+  }월 ${date.getDate()}일`;
 
-  // const nameData = parsedData.nameData?.split(",");
-  // const nameCount = nameData[2];
+  const nameData = parsedData.nameData?.split(",");
+  const nameCount = nameData[2];
 
-  // var result;
-  // if (parsedData.option == "website") {
-  //   const nameData = parsedData.nameData?.split(",");
-  //   const personalData = parsedData.personalData?.split(",");
+  var result;
+  if (parsedData.option == "website") {
+    const nameData = parsedData.nameData?.split(",");
+    const personalData = parsedData.personalData?.split(",");
 
-  //   const url = nameData[1];
-  //   if (nameData[2]) Number(nameData[2].replace("{", "").replace("}", ""));
-  //   const nameCount = nameData[2];
-  //   const name = nameData[3]; // 이렇게 해놓으면 이름 하나 밖에 안나옴. 여러 개 검출 되었을 때 어찌할지 생각해야함.
+    const url = nameData[1];
+    if (nameData[2]) Number(nameData[2].replace("{", "").replace("}", ""));
+    const nameCount = nameData[2];
+    const name = nameData[3]; // 이렇게 해놓으면 이름 하나 밖에 안나옴. 여러 개 검출 되었을 때 어찌할지 생각해야함.
 
-  //   result = (
-  //     <span>
-  //       {url}에서 찾은
-  //       <br />
-  //       이름으로 추정되는 것의 갯수 : {nameCount}
-  //       <br></br>
-  //       이름으로 추정되는 것 : {name}
-  //       <br />
-  //       {personalData.map((item: any, index: any) => (
-  //         <span key={index}>
-  //           {item}
-  //           <br />
-  //         </span>
-  //       ))}
-  //     </span>
-  //   );
-  // } else if (parsedData.option == "api") {
-  //   const content = parsedData.content;
-  //   result = <span>{content}</span>;
-  // } else if (parsedData.option == "csv") {
-  //   // console.log(url)
-  // }
-  // const content = result;
-
-  // const handleDownloadPdf = () => {
-  //   onPdfDownload("report", "report-pdf");
-  // };
-
-  //   return (
-  //     <S.body>
-  //       <Header />
-  //       <S.container>
-  //         <S.report id="report">
-  //           <h1>BLACKLIST</h1>
-  //           <p>
-  //             일시 : {formattedDate}
-  //             <br />
-  //             {content}
-  //           </p>
-  //         </S.report>
-  //         <S.download onClick={handleDownloadPdf}>Download PDF</S.download>
-  //       </S.container>
-  //     </S.body>
-  //   );
-  // };
-
-  return (
-    <>
-      <Document>
-        <Page size={[1024, 1440]} style={styles.page}>
-          <View style={styles.section}>
-            <Text style={styles.BlackList}>BLACKLIST</Text>
-            {/* <Text style={styles.Report}>REPORT</Text>*/}
-          </View>
-        </Page>
-        <Page size={[1024, 1440]} style={styles.page}>
-          <View style={styles.section}>
-            <Text>k</Text>
-          </View>
-        </Page>
-      </Document>
-    </>
+    result = (
+      <Text>
+        {url}에서 찾은 이름으로 추정되는 것의 갯수 : {nameCount}
+        {"\n"}
+        이름으로 추정되는 것 : {name}
+        {personalData.map((item: any, index: any) => (
+          <Text key={index}>{item}</Text>
+        ))}
+        {"\n"}
+      </Text>
+    );
+  } else if (parsedData.option == "api") {
+    const content = parsedData.content;
+    result = <Text>{content}</Text>;
+  } else if (parsedData.option == "csv") {
+    // console.log(url)
+  }
+  const content = result;
+  const pdfViewer = () => (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={reportImg}
+          ></Image>
+          <Text
+            id="title"
+            style={{
+              ...styles.text,
+              top: "40px",
+              textAlign: "center",
+              fontSize: "30px",
+            }}
+          >
+            BLACKLIST
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "120px",
+              left: "100px",
+              fontSize: "18px",
+              width: "400px",
+              lineHeight: "1.8px",
+            }}
+          >
+            일시 : {formattedDate}
+            {"\n"}
+            <Text>{content}</Text>
+          </Text>
+        </View>
+      </Page>
+    </Document>
   );
+  const DownloadLink = () => (
+    <PDFDownloadLink document={pdfViewer()} fileName="document.pdf">
+      {({ blob, url, loading, error }) =>
+        loading ? "Loading document..." : "Download now!"
+      }
+    </PDFDownloadLink>
+  );
+
+  return <>{pdfViewer()}</>;
 };
 
 export default Result;
