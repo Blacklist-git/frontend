@@ -23,13 +23,13 @@ export const Light = styled.div<{
 }>`
   position: absolute;
   opacity: 50%;
-  width: 30%;
-  height: 30%;
-  padding-top: 20%;
+  width: 15%;
+  height: 15%;
+  padding-top: 10%;
   background: radial-gradient(
     ellipse at center,
     ${({ lighted }) =>
-        lighted ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 0, 0, 0.6)"}
+        lighted ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 0, 0, 0.5)"}
       10%,
     transparent 80%
   );
