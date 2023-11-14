@@ -95,6 +95,7 @@ const Result = () => {
 
     result = (
       <Text>
+        {"\n"}
         {url}에서 찾은 이름으로 추정되는 것의 갯수 : {nameCount}
         {"\n"}
         이름으로 추정되는 것 : {name}
@@ -145,7 +146,6 @@ const Result = () => {
             }}
           >
             일시 : {formattedDate}
-            {"\n"}
             <Text>{content}</Text>
           </Text>
         </View>
