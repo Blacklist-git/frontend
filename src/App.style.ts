@@ -23,9 +23,9 @@ export const Light = styled.div<{
 }>`
   position: absolute;
   opacity: 50%;
-  width: 15%;
-  height: 15%;
-  padding-top: 10%;
+  width: 20%;
+  height: 5%;
+  padding-top: 20%;
   background: radial-gradient(
     ellipse at center,
     ${({ lighted }) =>

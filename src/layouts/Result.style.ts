@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import reportImage from "public/images/reportImage.svg";
 
 export const body = styled.div`
@@ -48,3 +48,4 @@ export const download = styled.button`
   margin-left: 0;
   justify-content: center;
 `;
+
