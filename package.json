@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^7.1.0",
-    "@react-pdf/renderer": "^3.1.14",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,25 +11,16 @@
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@types/styled-components": "^5.1.27",
-    "assert": "^2.1.0",
-    "browserify-zlib": "^0.2.0",
-    "buffer": "^6.0.3",
-    "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
-    "lodash": "^4.17.21",
-    "lodash.debounce": "^4.0.8",
-    "nodemailer": "^6.9.7",
-    "process": "^0.11.10",
+    "nodemailer": "^6.9.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.18.0",
+    "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
-    "stream-browserify": "^3.0.0",
-    "styled-components": "^6.1.1",
+    "styled-components": "^6.0.8",
     "typescript": "^4.9.5",
-    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -57,9 +46,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/file-saver": "^2.0.7",
-    "@types/lodash": "^4.14.201"
   }
 }
