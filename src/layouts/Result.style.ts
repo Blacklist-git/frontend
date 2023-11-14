@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import reportImage from "public/images/reportImage.svg";
 
 export const body = styled.div`
@@ -8,6 +8,7 @@ export const body = styled.div`
 `;
 export const container = styled.div`
   margin-top: 2%;
+  margin-bottom: 2%;
   width: 100%;
   height: 100%;
   background-color: none;
@@ -15,11 +16,11 @@ export const container = styled.div`
 `;
 
 export const report = styled.div`
-  background-image: url("/images/reportImage.svg");
-  background-size: cover;
-  width: 400px;
-  height: 560px;
-  margin: auto;
+  /* background-image: url("/images/reportImage.svg");
+  background-size: cover; */
+  /* width: 400px;
+  height: 560px; */
+  /* margin: auto;
   margin-top: 0;
   overflow-y: scroll;
   h1 {
@@ -31,7 +32,7 @@ export const report = styled.div`
     font-size: 0.6rem;
     font-weight: 400;
     padding-left: 10%;
-  }
+  } */
 `;
 export const download = styled.button`
   display: flex;
