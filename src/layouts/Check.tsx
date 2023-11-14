@@ -33,14 +33,27 @@ const Check = () => {
     setSelectedOption(event.target.value);
   };
 
-  const [localStorageSet, setLocalStorageSet] = useState(false);
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
+    if (
+      (selectedOption !== "csv" && urlToSend === "") ||
+      (selectedOption === "csv" && dataSend === "empty")
+    ) {
+      if (selectedOption === "csv") {
+        alert("파일을 선택해주세요");
+      } else {
+        alert("url을 입력해주세요");
+      }
+      setLoading(false);
+      return;
+    }
+    if (selectedOption === "csv" && placeholder.slice(-4) !== ".csv") {
+      alert("csv파일만 업로드해주세요.");
+      setLoading(false);
+      return;
+    }
 
-const handleFormSubmit = (event: React.FormEvent) => {
-  event.preventDefault();
-  setLoading(true);
-
-  // 이전에 저장된 데이터가 없는 경우에만 실행
-  if (!localStorageSet) {
     const dataType =
       selectedOption === "csv"
         ? { file: dataSend, option: selectedOption }
@@ -65,7 +78,6 @@ const handleFormSubmit = (event: React.FormEvent) => {
       .then((data) => {
         console.log(data);
         localStorage.setItem("myData", JSON.stringify(data));
-        setLocalStorageSet(true);
         setLoading(false);
         navigate("/result");
       })
@@ -73,12 +85,7 @@ const handleFormSubmit = (event: React.FormEvent) => {
         console.error("Error:", error);
         setLoading(false);
       });
-  } else {
-    setLoading(false);
-    navigate("/result");
-  }
-};
-
+  };
 
   // const handleMouseMove = (event: MouseEvent) => {
   //   setLightPosition({ x: event.clientX, y: event.clientY });
