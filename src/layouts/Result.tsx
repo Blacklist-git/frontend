@@ -4,7 +4,7 @@ import React from "react";
 import reportImg from "../assets/img/reportImage.png";
 import Header from "../components/header/Header";
 
-import {
+import ReactPDF, {
   Document,
   Page,
   View,
@@ -135,16 +135,103 @@ const Result = () => {
           </Text>
         </View>
       </Page>
+      <Page size="A4" style={styles.page}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={reportImg}
+          ></Image>
+          <Text
+            id="title"
+            style={{
+              ...styles.text,
+              top: "40px",
+              textAlign: "center",
+              fontSize: "30px",
+            }}
+          >
+            BLACKLIST
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "120px",
+              left: "100px",
+              fontSize: "18px",
+              width: "400px",
+              lineHeight: "1.8px",
+            }}
+          >
+            일시 : {formattedDate}
+            <Text>{content}</Text>
+          </Text>
+        </View>
+      </Page>
     </Document>
   );
+  const pdf = pdfViewer();
 
   const DonwloadPdf = () => (
-    <PDFDownloadLink document={pdfViewer()} fileName="Report.pdf">
+    <PDFDownloadLink document={pdf} fileName="Report.pdf">
       {({ blob, url, loading, error }) =>
         loading ? "Loading document..." : "Download now!"
       }
     </PDFDownloadLink>
   );
+
+  const savePDF = async () => {
+    const streamToBlob = async (
+      stream: ReadableStream<Uint8Array>,
+    ): Promise<Blob> => {
+      const chunks: Uint8Array[] = [];
+      const reader = stream.getReader();
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        chunks.push(value);
+      }
+
+      return new Blob(chunks, { type: "application/pdf" });
+    };
+
+    const formData = new FormData();
+    const rawPdfStream = await ReactPDF.renderToStream(pdf);
+    const pdfStream = rawPdfStream as unknown as ReadableStream<Uint8Array>;
+    const pdfBlob = await streamToBlob(pdfStream);
+    formData.append("pdfFile", pdfBlob, "Report.pdf");
+
+    fetch(`https://127.0.0.1:8000/server/savePDF`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/pdf",
+      },
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return console.log("PDF saved successully");
+        // return response.json();
+      })
+      // .then((data) => {
+      //   console.log(data);
+      //   localStorage.setItem("myData", JSON.stringify(data));
+      // })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <>
       <S.body>
@@ -158,6 +245,7 @@ const Result = () => {
             height="500px"
           >
             {pdfViewer()}
+            {/* {savePDF()} */}
           </PDFViewer>
           <S.download>
             <DonwloadPdf />

@@ -62,7 +62,7 @@ const Check = () => {
     const apiUrlType = selectedOption === "csv" ? "file" : `crawl/${urlToSend}`;
     const data = dataType;
 
-    fetch(`http://127.0.0.1:8000/${apiUrlType}/${selectedOption}`, {
+    fetch(`https://127.0.0.1:8000/server/${apiUrlType}/${selectedOption}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,25 +86,8 @@ const Check = () => {
         setLoading(false);
       });
   };
-
-  // const handleMouseMove = (event: MouseEvent) => {
-  //   setLightPosition({ x: event.clientX, y: event.clientY });
-  //   const targetElement = document.elementFromPoint(
-  //     event.clientX,
-  //     event.clientY,
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("mousemove", handleMouseMove);
-  //   return () => {
-  //     window.removeEventListener("mousemove", handleMouseMove);
-  //   };
-  // }, []); // Add event listener on mount and remove on unmount
-
   return (
     <S.Body>
-      {/* <S.Light /> */}
       <Header />
       <S.Container>
         <S.Title>Protect your website</S.Title>
