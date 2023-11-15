@@ -62,7 +62,7 @@ const Check = () => {
     const apiUrlType = selectedOption === "csv" ? "file" : `crawl/${urlToSend}`;
     const data = dataType;
 
-    fetch(`https://127.0.0.1:8000/server/${apiUrlType}/${selectedOption}`, {
+    fetch(`https://34.197.212.64:8000/server/${apiUrlType}/${selectedOption}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
