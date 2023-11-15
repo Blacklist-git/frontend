@@ -16,27 +16,3 @@ export const container = styled.div`
   padding-right: 10%;
   position: fixed;
 `;
-
-export const Light = styled.div<{
-  lighted: boolean;
-  lightPosition: { x: number; y: number };
-}>`
-  position: absolute;
-  opacity: 50%;
-  width: 13%;
-  height: 13%;
-  padding-top: 8%;
-  background: radial-gradient(
-    ellipse at center,
-    ${({ lighted }) =>
-        lighted ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 0, 0, 0.6)"}
-      10%,
-    transparent 80%
-  );
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: top 0.2s, left 0.2s;
-  top: ${(props) => props.lightPosition.y}px;
-  left: ${(props) => props.lightPosition.x}px;
-  /* z-index: 1; */
-`;

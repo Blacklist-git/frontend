@@ -1,8 +1,8 @@
 //import Header from "../components/header/Header";
 import * as S from "./Result.style";
-import onPdfDownload from "../hook/onPdfDownload";
 import React from "react";
 import reportImg from "../assets/img/reportImage.png";
+import Header from "../components/header/Header";
 
 import {
   Document,
@@ -13,6 +13,7 @@ import {
   StyleSheet,
   Image,
   PDFDownloadLink,
+  PDFViewer,
   pdf,
 } from "@react-pdf/renderer";
 
@@ -29,20 +30,10 @@ const styles = StyleSheet.create({
     backgroundImage: `url(${reportImg})`,
     margin: 0,
   },
-  // BlackList: {
-  //   width: '81vh',
-  //   height: '700px',
-  //   textAlign: 'center',
-  //   color: '#AA0002',
-  //   fontSize: '208px',
-  //   transform: 'rotate(-16.97deg)',
-  //   top: '700px',
-  //   fontStyle: 'bold',
-  // whiteSpace: 'nowrap',
-  // overflow: 'hidden',
-  // textOverflow: 'ellipsis',
-
-  //},
+  viewer: {
+    position: "relative",
+    top: "30px",
+  },
 
   text: {
     fontSize: 50,
@@ -54,16 +45,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontFamily: "NanumGothic",
   },
-
-  // Report: {
-  //   width: "100%",
-  //   textAlign: "center",
-  //   fontSize: "100px",
-  //   color: '#AA0002',
-  //   top: '100px',
-  //   transform: 'rotate(-16.97deg)',
-  //   left: '350px',
-  // }
 });
 
 const Result = () => {
@@ -95,12 +76,16 @@ const Result = () => {
 
     result = (
       <Text>
-        {"\n"}
-        {url}에서 찾은 이름으로 추정되는 것의 갯수 : {nameCount}
-        {"\n"}
+        <Text>{"\n"}</Text>
+        {url}에서 찾은 <Text>{"\n"}</Text>이름으로 추정되는 것의 갯수 :{" "}
+        {nameCount}
+        <Text>{"\n"}</Text>
         이름으로 추정되는 것 : {name}
         {personalData.map((item: any, index: any) => (
-          <Text key={index}>{item}</Text>
+          <Text key={index}>
+            <Text>{"\n"}</Text>
+            {item}
+          </Text>
         ))}
         {"\n"}
       </Text>
@@ -152,15 +137,35 @@ const Result = () => {
       </Page>
     </Document>
   );
-  const DownloadLink = () => (
-    <PDFDownloadLink document={pdfViewer()} fileName="document.pdf">
+
+  const DonwloadPdf = () => (
+    <PDFDownloadLink document={pdfViewer()} fileName="Report.pdf">
       {({ blob, url, loading, error }) =>
         loading ? "Loading document..." : "Download now!"
       }
     </PDFDownloadLink>
   );
-
-  return <>{pdfViewer()}</>;
+  return (
+    <>
+      <S.body>
+        <Header />
+        <S.container>
+          <PDFViewer
+            showToolbar={false}
+            style={styles.viewer}
+            // width="375px"
+            width="400px"
+            height="500px"
+          >
+            {pdfViewer()}
+          </PDFViewer>
+          <S.download>
+            <DonwloadPdf />
+          </S.download>
+        </S.container>
+      </S.body>
+    </>
+  );
 };
 
 export default Result;
