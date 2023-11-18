@@ -62,12 +62,20 @@ const Check = () => {
     const apiUrlType = selectedOption === "csv" ? "file" : `crawl/${urlToSend}`;
     const data = dataType;
 
-    fetch(`https://34.197.212.64:8000/server/${apiUrlType}/${selectedOption}`, {
+    const dataToSend = {
+      url: urlToSend,
+      option: selectedOption,
+    };
+
+    fetch(`https://34.197.212.64:8000/server/crawl`, {
+      // fetch(`http://127.0.0.1:8000/server/crawl`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(dataToSend),
     })
       .then((response) => {
         if (!response.ok) {
@@ -79,7 +87,8 @@ const Check = () => {
         console.log(data);
         localStorage.setItem("myData", JSON.stringify(data));
         setLoading(false);
-        navigate("/result");
+        if (selectedOption == "website") navigate("/confirm");
+        else navigate("/result");
       })
       .catch((error) => {
         console.error("Error:", error);

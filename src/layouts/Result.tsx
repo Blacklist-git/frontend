@@ -209,7 +209,7 @@ const Result = () => {
     const pdfBlob = await streamToBlob(pdfStream);
     formData.append("pdfFile", pdfBlob, "Report.pdf");
 
-    fetch(`https://127.0.0.1:8000/server/savePDF`, {
+    fetch(`https://34.197.212.64:8000/server/savePDF`, {
       method: "POST",
       headers: {
         "Content-Type": "application/pdf",
@@ -221,12 +221,12 @@ const Result = () => {
           throw new Error("Network response was not ok");
         }
         return console.log("PDF saved successully");
-        // return response.json();
+        return response.json();
       })
-      // .then((data) => {
-      //   console.log(data);
-      //   localStorage.setItem("myData", JSON.stringify(data));
-      // })
+      .then((data) => {
+        console.log(data);
+        localStorage.setItem("myData", JSON.stringify(data));
+      })
       .catch((error) => {
         console.error("Error:", error);
       });
