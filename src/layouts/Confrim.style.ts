@@ -8,24 +8,23 @@ export const body = styled.div`
 
 export const container = styled.div`
   /* margin-top: 5%; */
+  position: relative;
   width: 100%;
-  height: 60%;
+  height: 55%;
   background-color: black;
-  border: 0.5px solid #ff0909;
+  border: 1px solid #ff0909;
   border-radius: 40px;
-  padding-top: 4%;
+  padding-top: 3%;
   overflow: scroll;
-  padding-left: 4%;
-`;
-
-export const text = styled.div`
-  color: white;
-  width: 100%;
+  padding-left: 3%;
+  padding-right: 6%;
+  padding-bottom: 2%;
 `;
 
 export const Title = styled.h1`
-  /* text-align: center; */
+  text-align: center;
   color: white;
+  margin-top: 2%;
   font-weight: 500;
   /* margin-left: 3%; */
   /* margin-top: 5%; */
@@ -37,21 +36,33 @@ export const subTitle = styled.div`
   color: white;
   font-weight: normal;
   font-size: 1.6rem;
-  margin-bottom: 2%;
   width: 100%;
 `;
-export const content = styled.div`
-  width: 100%;
-  height: 100%;
+
+export const checkBtn = styled.div`
+  display: flex;
+  margin-left: 9%;
+  border-radius: 5px;
+  background-color: ${(props) =>
+    props.color == "Correct" ? "white" : "#b80103"};
+  color: ${(props) => (props.color == "Correct" ? "black" : "white")};
+  font-size: 0.9rem;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const name = styled.div`
+  margin-top: 2%;
   width: 100%;
-  height: 100%;
-  /* padding: 0; */
+  height: fit-content;
+  padding-left: 2%;
   display: flex;
   overflow-y: scroll;
   ul {
+    margin: 0;
     padding: 0;
     flex-flow: wrap;
     gap: 1%;
@@ -63,26 +74,48 @@ export const name = styled.div`
     display: flex;
     list-style: none;
     width: 18%;
-    height: 10%;
+    line-height: 165%;
+    height: 100%;
     color: white;
     align-items: center;
     padding-bottom: 3%;
   }
+  ${checkBtn} {
+    font-size: 0.8rem;
+    width: 29%;
+  }
 `;
 
-export const checkBtn = styled.div`
-  display: flex;
-  width: 40%;
-  margin-left: 9%;
-  height: 100%;
-  border-radius: 5px;
-  background-color: ${(props) =>
-    props.color == "Correct" ? "white" : "#b80103"};
-  color: ${(props) => (props.color == "Correct" ? "black" : "white")};
-  font-size: 0.9rem;
-  justify-content: center;
-  align-items: center;
-  &:hover {
-    cursor: pointer;
+export const personal = styled.div`
+  width: 100%;
+  overflow-y: scroll;
+  color: white;
+  padding-left: 2%;
+  padding-bottom: 2%;
+  ul {
+    margin: 0;
+    padding: 0;
+    height: fit-content;
+  }
+  li {
+    margin-top: 2%;
+    display: flex;
+    line-height: 200%;
+    padding-bottom: 2%;
+    align-items: center;
+    border-bottom: 1px solid white;
+  }
+  p {
+    margin: 0;
+    height: fit-content;
+    width: 87%;
+  }
+  ${checkBtn} {
+    position: absolute;
+    right: 5%;
+    height: 6%;
+    width: 5%;
+    justify-content: center;
+    font-size: 0.8rem;
   }
 `;

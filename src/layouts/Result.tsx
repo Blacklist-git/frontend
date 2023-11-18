@@ -21,6 +21,13 @@ Font.register({
   family: "NanumGothic",
   src: "https://fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.ttf",
 });
+interface ParsedData {
+  option: string;
+  url: string;
+  nameData: string[];
+  personalData: string[];
+  content: string;
+}
 
 const styles = StyleSheet.create({
   image: { width: "100%", height: "100%", position: "absolute" },
@@ -49,31 +56,23 @@ const styles = StyleSheet.create({
 
 const Result = () => {
   const data = localStorage.getItem("myData");
-  var parsedData;
-  if (data !== null) {
-    parsedData = JSON.parse(data);
-    // 이제 parsedData는 유효한 JSON 문자열로 파싱됐을 것입니다.
-  } else {
-    console.log("Data not found in localStorage");
-  }
+  console.log(data);
+  const parsedData: ParsedData | null = data ? JSON.parse(data) : null;
+  console.log(parsedData);
+
   const date = new Date();
   const formattedDate = `${date.getFullYear()}년 ${
     date.getMonth() + 1
   }월 ${date.getDate()}일`;
 
-  const nameData = parsedData.nameData?.split(",");
-  const nameCount = nameData[2];
-
   var result;
-  if (parsedData.option == "website") {
-    const nameData = parsedData.nameData?.split(",");
-    const personalData = parsedData.personalData?.split(",");
-
-    const url = nameData[1];
-    if (nameData[2]) Number(nameData[2].replace("{", "").replace("}", ""));
-    const nameCount = nameData[2];
-    const name = nameData[3]; // 이렇게 해놓으면 이름 하나 밖에 안나옴. 여러 개 검출 되었을 때 어찌할지 생각해야함.
-
+  if (parsedData && parsedData.option == "website") {
+    const url = parsedData.url;
+    const nameCount = parsedData.nameData.length;
+    const nameData = parsedData.nameData;
+    const name = nameData.map((nameItem: string) => `${nameItem} `).join("");
+    const personalData = parsedData.personalData;
+    console.log("result " + parsedData);
     result = (
       <Text>
         <Text>{"\n"}</Text>
@@ -90,10 +89,10 @@ const Result = () => {
         {"\n"}
       </Text>
     );
-  } else if (parsedData.option == "api") {
+  } else if (parsedData && parsedData.option == "api") {
     const content = parsedData.content;
     result = <Text>{content}</Text>;
-  } else if (parsedData.option == "csv") {
+  } else if (parsedData && parsedData.option == "csv") {
     // console.log(url)
   }
   const content = result;
@@ -240,9 +239,8 @@ const Result = () => {
           <PDFViewer
             showToolbar={false}
             style={styles.viewer}
-            // width="375px"
-            width="400px"
-            height="500px"
+            width="32%"
+            height="70%"
           >
             {pdfViewer()}
             {/* {savePDF()} */}

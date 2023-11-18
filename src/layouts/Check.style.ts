@@ -11,7 +11,7 @@ export const Container = styled.div`
   width: 100%;
   height: 60%;
   background-color: none;
-  border: 0.5px solid #ff0909;
+  border: 1px solid #ff0909;
   border-radius: 40px;
   position: relative;
   overflow: hidden;

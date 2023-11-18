@@ -1,5 +1,6 @@
 import Header from "../components/header/Header";
 import * as S from "./Check.style";
+import * as C from "../components/components.style";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useRef } from "react";
@@ -122,13 +123,13 @@ const Check = () => {
           </S.InputBtn>
         </S.InputUrl>
         {loading ? (
-          <S.ResultBtn>Loading...</S.ResultBtn>
+          <C.ResultBtn>Loading...</C.ResultBtn>
         ) : (
-          <S.ResultBtn>
+          <C.ResultBtn>
             <Link to="/confirm" onClick={handleFormSubmit}>
               결과 보기
             </Link>
-          </S.ResultBtn>
+          </C.ResultBtn>
         )}
       </S.Container>
     </S.Body>
