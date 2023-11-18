@@ -2,11 +2,12 @@ import * as S from "./Confrim.style";
 import * as C from "../components/components.style";
 import Header from "../components/header/Header";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { parse } from "path";
 
 const Confirm = () => {
   process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+  const navigate = useNavigate();
   const data = localStorage.getItem("myData");
   const parsedData = data
     ? JSON.parse(data)
@@ -100,20 +101,50 @@ const Confirm = () => {
   };
 
   function sendData() {
+    // 카운트 배열 초기화
+    const countArray = Array(personalArray.length).fill(0);
+
+    // personalArray를 순회하면서 countArray 갱신
+    personalArray.forEach((personalData, index) => {
+      const match = personalData.data.match(/갯수는 : (\d+)/);
+      countArray[index] = match ? parseInt(match[1], 10) : 0;
+    });
+    console.log(countArray);
+
+    // Incorrect 항목은 countArray의 값을 0으로 설정
+    personalArray.forEach((personalData, index) => {
+      if (personalData.isCorrect === "Incorrect") {
+        countArray[index + countArray.length / 2] -= 1;
+      }
+    });
+
+    // personalData 갱신
+    const updatedPersonalData = personalArray
+      .map((personalData, index) => {
+        return (
+          countArray[index] != 0 &&
+          personalData.data.replace(
+            /갯수는 : (\d+)/,
+            `갯수는 : ${countArray[index]}`,
+          )
+        );
+      })
+      .filter(Boolean);
+
     const updatedData = {
       nameData: nameArray
         .filter((nameData) => nameData.isCorrect === "Correct")
         .map((nameData) => nameData.data),
-      personalData: personalArray
-        .filter((personalData) => personalData.isCorrect === "Correct")
-        .map((personalData) => personalData.data),
+      personalData: updatedPersonalData,
       url: parsedData.url,
       option: parsedData.option,
       content: parsedData.content,
     };
+
     console.log(parsedData);
     console.log(updatedData);
     localStorage.setItem("myData", JSON.stringify(updatedData));
+    navigate("/result");
   }
 
   const result = (
@@ -144,25 +175,25 @@ const Confirm = () => {
           <S.subTitle>Personal Data</S.subTitle>
           <S.personal>
             <ul>
-              {personalArray.map((personalData, index) => (
-                <li key={index}>
-                  <p>{personalData.data}</p>
-                  <S.checkBtn
-                    onClick={() => handleCheckBtnClick(index, "personal")}
-                    color={personalArray[index].isCorrect}
-                  >
-                    {personalArray[index].isCorrect}
-                  </S.checkBtn>
-                </li>
-              ))}
+              {personalArray
+                .filter((personalData) => !personalData.data.includes("갯수는"))
+                .map((personalData, index) => (
+                  <li key={index}>
+                    <p>{personalData.data}</p>
+                    <S.checkBtn
+                      onClick={() => handleCheckBtnClick(index, "personal")}
+                      color={personalArray[index].isCorrect}
+                    >
+                      {personalArray[index].isCorrect}
+                    </S.checkBtn>
+                  </li>
+                ))}
             </ul>
           </S.personal>
         </>
       )}
       <>
-        <C.ResultBtn onClick={() => sendData()}>
-          <Link to="/result">제출</Link>
-        </C.ResultBtn>
+        <C.ResultBtn onClick={() => sendData()}>제출</C.ResultBtn>
       </>
     </>
   );
