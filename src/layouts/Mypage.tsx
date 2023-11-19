@@ -5,9 +5,16 @@ import profile from "../assets/img/profile.webp";
 import edit from "../assets/img/editProfile.svg";
 import download from "../assets/img/download.png";
 import analList from "../data/analList";
+import { Navigate } from "react-router-dom";
 
 const Mypage = () => {
   const [open, setOpen] = useState(false);
+  const isAuthenticated = !!localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  console.log(token);
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
 
   // const downloadFile = (url: string) => {
   //   url = "파일에 대한 url";
@@ -80,13 +87,13 @@ const Mypage = () => {
             </S.analBox>
           ))}
         </S.analContainer>
-        <S.profileInfo>
+        {/* <S.profileInfo>
           <S.profile>
             <S.profileImg src={profile} />
             <S.edit src={edit} />
           </S.profile>
           <S.name>Name</S.name>
-        </S.profileInfo>
+        </S.profileInfo> */}
       </S.container>
     </S.body>
   );

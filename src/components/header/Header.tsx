@@ -1,8 +1,31 @@
 import * as S from "./Header.style";
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // 토큰이 존재하면 로그인 상태로 설정
+      setLoggedIn(true);
+
+      // 여기에서 유저 정보를 가져와서 userName 설정
+      // 예: setUserName("유저이름");
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // 로그아웃 처리
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    setUserName(""); // 로그아웃 시 userName 초기화
+    navigate("/login");
+  };
+
   return (
     <div>
       <S.header>

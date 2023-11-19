@@ -2,8 +2,7 @@ import Header from "../components/header/Header";
 import * as S from "./Check.style";
 import * as C from "../components/components.style";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useRef } from "react";
+import { useState } from "react";
 
 const Check = () => {
   const navigate = useNavigate();
@@ -55,13 +54,12 @@ const Check = () => {
       return;
     }
 
-    const dataType =
-      selectedOption === "csv"
-        ? { file: dataSend, option: selectedOption }
-        : { url: urlToSend, option: selectedOption };
+    // const dataType =
+    //   selectedOption === "csv"
+    //     ? { file: dataSend, option: selectedOption }
+    //     : { url: urlToSend, option: selectedOption };
 
     const apiUrlType = selectedOption === "csv" ? "file" : `crawl`;
-    const data = dataType;
 
     const dataToSend = {
       url: urlToSend,
@@ -88,7 +86,7 @@ const Check = () => {
         console.log(data);
         localStorage.setItem("myData", JSON.stringify(data));
         setLoading(false);
-        if (selectedOption == "website") navigate("/confirm");
+        if (selectedOption === "website") navigate("/confirm");
         else navigate("/result");
       })
       .catch((error) => {

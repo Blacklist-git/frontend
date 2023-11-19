@@ -74,7 +74,7 @@ const Result = () => {
     const personalData = parsedData.personalData;
     console.log("result " + parsedData);
     result = (
-      <Text>
+      <>
         <Text>{"\n"}</Text>
         {url}에서 찾은 <Text>{"\n"}</Text>이름으로 추정되는 것의 갯수 :{" "}
         {nameCount}
@@ -87,7 +87,7 @@ const Result = () => {
           </Text>
         ))}
         {"\n"}
-      </Text>
+      </>
     );
   } else if (parsedData && parsedData.option == "api") {
     const content = parsedData.content;
@@ -175,7 +175,7 @@ const Result = () => {
   const pdf = pdfViewer();
 
   const DonwloadPdf = () => (
-    <PDFDownloadLink document={pdf} fileName="Report.pdf">
+    <PDFDownloadLink document={pdfViewer()} fileName="Report.pdf">
       {({ blob, url, loading, error }) =>
         loading ? "Loading document..." : "Download now!"
       }

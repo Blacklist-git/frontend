@@ -51,7 +51,7 @@ export const analContainer = styled.div`
     margin: 0;
   }
   display: block;
-  width: 90%;
+  width: 100%;
   height: 80%;
   overflow-y: auto; /* 스크롤바를 필요에 따라 표시 */
   scrollbar-width: none; /* Firefox에서 스크롤바 숨김 */
@@ -64,7 +64,7 @@ export const analContainer = styled.div`
 
 export const analBox = styled.div`
   margin-top: 2%;
-  width: 90%;
+  width: 100%;
   height: 60px;
   background-color: #d9d9d9;
   border-radius: 10px;

@@ -3,7 +3,6 @@ import * as C from "../components/components.style";
 import Header from "../components/header/Header";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { parse } from "path";
 
 const Confirm = () => {
   process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
@@ -65,7 +64,7 @@ const Confirm = () => {
   }, [nameArray]);
 
   const handleCheckBtnClick = (index: number, type: string) => {
-    if (type == "name") {
+    if (type === "name") {
       setNameArray((prevNameArray) => {
         const updatedNameArray = [...prevNameArray];
         console.log("Before update:", updatedNameArray[index].isCorrect);
@@ -81,7 +80,7 @@ const Confirm = () => {
         console.log("After update:", updatedNameArray[index].isCorrect);
         return updatedNameArray;
       });
-    } else if (type == "personal") {
+    } else if (type === "personal") {
       setPersonalArray((prevPersonalArray) => {
         const updatedPersonalArray = [...prevPersonalArray];
         console.log("Before update:", updatedPersonalArray[index].isCorrect);
