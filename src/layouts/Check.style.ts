@@ -100,24 +100,6 @@ export const Select = styled.select`
   }
 `;
 
-export const ResultBtn = styled.button`
-  display: flex;
-  width: 17%;
-  height: 15%;
-  background-color: #b80103;
-  margin: auto;
-  border: none;
-  border-radius: 15px;
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
-  align-items: center;
-  justify-content: center;
-  a {
-    text-decoration: none;
-    color: white;
-  }
-`;
 
 export const FileUpload = styled.input.attrs({
   type: "file",

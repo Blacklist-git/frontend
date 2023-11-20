@@ -25,7 +25,6 @@ export const download = styled.button`
   font-weight: 700;
   align-items: center;
   margin: auto;
-  margin-left: 30%;
   justify-content: center;
   a {
     text-decoration: none;

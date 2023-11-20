@@ -9,7 +9,7 @@ const Check = () => {
   const [loading, setLoading] = useState(false);
   const [urlToSend, setUrlToSend] = useState("");
   const [selectedOption, setSelectedOption] = useState("website");
-  const [dataSend, setDataSend] = useState<FormData | string>("empty");
+  const [dataSend, setDataSend] = useState<FormData | null>(null);
   const [placeholder, setPlaceholder] = useState("파일을 선택해주세요");
   // const [lightPosition, setLightPosition] = useState({ x: 0, y: 0 });
 
@@ -38,7 +38,7 @@ const Check = () => {
     setLoading(true);
     if (
       (selectedOption !== "csv" && urlToSend === "") ||
-      (selectedOption === "csv" && dataSend === "empty")
+      (selectedOption === "csv" && dataSend === null)
     ) {
       if (selectedOption === "csv") {
         alert("파일을 선택해주세요");
@@ -59,35 +59,48 @@ const Check = () => {
     //     ? { file: dataSend, option: selectedOption }
     //     : { url: urlToSend, option: selectedOption };
 
-    const apiUrlType = selectedOption === "csv" ? "file" : `crawl`;
-
     const dataToSend = {
       url: urlToSend,
       option: selectedOption,
     };
+    const contentType =
+      selectedOption === "website" ? "application/json" : "multipart/form-data";
 
-    fetch(`https://34.197.212.64:8000/server/${apiUrlType}`, {
-      // fetch(`http://127.0.0.1:8000/server/crawl`, {
+    const requestOptions: RequestInit = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       credentials: "include",
       mode: "cors",
-      body: JSON.stringify(dataToSend),
-    })
+      body:
+        selectedOption === "website" ? JSON.stringify(dataToSend) : dataSend,
+    };
+
+    if (selectedOption === "website") {
+      requestOptions.headers = {
+        "Content-Type": contentType,
+      };
+    }
+
+    fetch(`https://34.197.212.64:8000/server/${selectedOption}`, requestOptions)
+      // fetch(`http://127.0.0.1:8000/server/${selectedOption}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        localStorage.clear();
+        return selectedOption === "website"
+          ? response.json()
+          : response.formData;
       })
       .then((data) => {
         console.log(data);
-        localStorage.setItem("myData", JSON.stringify(data));
-        setLoading(false);
-        if (selectedOption === "website") navigate("/confirm");
-        else navigate("/result");
+        if (selectedOption === "website") {
+          localStorage.setItem("myData", JSON.stringify(data));
+          setLoading(false);
+          navigate("/confirm");
+        } else if (selectedOption === "csv") {
+          setLoading(false);
+          navigate("/result");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);

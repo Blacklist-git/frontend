@@ -56,8 +56,13 @@ const styles = StyleSheet.create({
 
 const Result = () => {
   const data = localStorage.getItem("myData");
-  console.log(data);
-  const parsedData: ParsedData | null = data ? JSON.parse(data) : null;
+  console.log("data : " + data);
+  const parsedData = data
+    ? JSON.parse(data).option === "website"
+      ? (JSON.parse(data) as ParsedData)
+      : JSON.parse(data)
+    : null;
+  // const parsedData: ParsedData | null = data ? JSON.parse(data) : null;
   console.log(parsedData);
 
   const date = new Date();
@@ -66,31 +71,39 @@ const Result = () => {
   }월 ${date.getDate()}일`;
 
   var result;
-  if (parsedData && parsedData.option == "website") {
+  if (parsedData && parsedData.option === "website") {
     const url = parsedData.url;
     const nameCount = parsedData.nameData.length;
     const nameData = parsedData.nameData;
-    const name = nameData.map((nameItem: string) => `${nameItem} `).join("");
+    const name = Array.isArray(nameData)
+      ? nameData.map((nameItem: string) => `${nameItem} `).join("")
+      : "";
     const personalData = parsedData.personalData;
     console.log("result " + parsedData);
     result = (
       <>
-        <Text>{"\n"}</Text>
-        {url}에서 찾은 <Text>{"\n"}</Text>이름으로 추정되는 것의 갯수 :{" "}
-        {nameCount}
-        <Text>{"\n"}</Text>
-        이름으로 추정되는 것 : {name}
-        {personalData.map((item: any, index: any) => (
-          <Text key={index}>
+        {nameCount > 0 ? (
+          <>
             <Text>{"\n"}</Text>
-            {item}
-          </Text>
-        ))}
-        {"\n"}
+            {url}에서 찾은 <Text>{"\n"}</Text>
+            이름으로 추정되는 것의 갯수 : {nameCount}
+            <Text>{"\n"}</Text>
+            이름으로 추정되는 것 : {name}
+            {Array.isArray(personalData)
+              ? personalData.map((item: any, index: any) => (
+                  <Text key={index}>
+                    <Text>{"\n"}</Text>
+                    {item}
+                  </Text>
+                ))
+              : ""}
+            {"\n"}
+          </>
+        ) : null}
       </>
     );
   } else if (parsedData && parsedData.option == "api") {
-    const content = parsedData.content;
+    const content = "dfs";
     result = <Text>{content}</Text>;
   } else if (parsedData && parsedData.option == "csv") {
     // console.log(url)
@@ -230,24 +243,52 @@ const Result = () => {
         console.error("Error:", error);
       });
   };
+  const handleDownloadClick = () => {
+    // 클라이언트가 서버에 있는 파일을 다운로드하도록 하는 로직
+    // fetch("http://127.0.0.1:8000/server/download")
+    fetch("https://34.197.212.64:8000/server/download")
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "file.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   return (
     <>
       <S.body>
         <Header />
         <S.container>
-          <PDFViewer
-            showToolbar={false}
-            style={styles.viewer}
-            width="32%"
-            height="70%"
-          >
-            {pdfViewer()}
-            {/* {savePDF()} */}
-          </PDFViewer>
-          <S.download>
-            <DonwloadPdf />
-          </S.download>
+          {(parsedData && parsedData.option == "website") ||
+          (parsedData && parsedData.option == "api") ? (
+            <>
+              <PDFViewer
+                showToolbar={false}
+                style={styles.viewer}
+                width="32%"
+                height="70%"
+              >
+                {pdfViewer()}
+                {/* {savePDF()} */}
+              </PDFViewer>
+              <S.download>
+                <DonwloadPdf />
+              </S.download>
+            </>
+          ) : (
+            <>
+              <S.download onClick={handleDownloadClick}>
+                Download now!
+              </S.download>
+            </>
+          )}
         </S.container>
       </S.body>
     </>
