@@ -55,7 +55,7 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         localStorage.setItem("token", data.access_token);
         navigate("/");
       })

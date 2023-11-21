@@ -48,6 +48,13 @@ const Check = () => {
       setLoading(false);
       return;
     }
+    if (!/^[a-zA-Z._]+$/.test(placeholder) && selectedOption === "csv") {
+      alert(
+        "파일 제목에는 영어, 점(.) 또는 언더스코어(_)만 포함되어야 합니다.",
+      );
+      setLoading(false);
+      return;
+    }
     if (selectedOption === "csv" && placeholder.slice(-4) !== ".csv") {
       alert("csv파일만 업로드해주세요.");
       setLoading(false);
@@ -80,24 +87,26 @@ const Check = () => {
       };
     }
 
-    fetch(`https://34.197.212.64:8000/server/${selectedOption}`, requestOptions)
-      // fetch(`http://127.0.0.1:8000/server/${selectedOption}`, requestOptions)
+    // fetch(`https://34.197.212.64:8000/server/${selectedOption}`, requestOptions)
+    fetch(`http://127.0.0.1:8000/server/${selectedOption}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         localStorage.clear();
-        return selectedOption === "website"
-          ? response.json()
-          : response.formData;
+        return response.json();
       })
       .then((data) => {
-        console.log(data);
+        console.log(typeof data);
         if (selectedOption === "website") {
           localStorage.setItem("myData", JSON.stringify(data));
+          console.log("mydata : ", JSON.stringify(data));
           setLoading(false);
           navigate("/confirm");
         } else if (selectedOption === "csv") {
+          console.log(data.option);
+          localStorage.setItem("myData", JSON.stringify(data));
+          console.log("mydata : ", JSON.stringify(data));
           setLoading(false);
           navigate("/result");
         }

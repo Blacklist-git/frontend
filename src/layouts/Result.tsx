@@ -3,6 +3,7 @@ import * as S from "./Result.style";
 import React from "react";
 import reportImg from "../assets/img/reportImage.png";
 import Header from "../components/header/Header";
+import streamToBlob from "../hook/streamToBlob";
 
 import ReactPDF, {
   Document,
@@ -16,6 +17,7 @@ import ReactPDF, {
   PDFViewer,
   pdf,
 } from "@react-pdf/renderer";
+import { type } from "os";
 
 Font.register({
   family: "NanumGothic",
@@ -185,7 +187,6 @@ const Result = () => {
       </Page>
     </Document>
   );
-  const pdf = pdfViewer();
 
   const DonwloadPdf = () => (
     <PDFDownloadLink document={pdfViewer()} fileName="Report.pdf">
@@ -196,57 +197,37 @@ const Result = () => {
   );
 
   const savePDF = async () => {
-    const streamToBlob = async (
-      stream: ReadableStream<Uint8Array>,
-    ): Promise<Blob> => {
-      const chunks: Uint8Array[] = [];
-      const reader = stream.getReader();
+    const pdfBlob = await pdf(pdfViewer()).toBlob(); // 수정된 부분
+    const formData = new FormData();
+    formData.append("pdfFile", pdfBlob);
+    console.log(typeof pdfBlob);
+    console.log(typeof formData);
 
-      while (true) {
-        const { done, value } = await reader.read();
+    try {
+      // 서버에 전송
+      const response = await fetch(`http://127.0.0.1:8000/server/savePDF`, {
+        method: "POST",
+        credentials: "include",
+        mode: "cors",
+        body: formData,
+      });
 
-        if (done) {
-          break;
-        }
-
-        chunks.push(value);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
 
-      return new Blob(chunks, { type: "application/pdf" });
-    };
-
-    const formData = new FormData();
-    const rawPdfStream = await ReactPDF.renderToStream(pdf);
-    const pdfStream = rawPdfStream as unknown as ReadableStream<Uint8Array>;
-    const pdfBlob = await streamToBlob(pdfStream);
-    formData.append("pdfFile", pdfBlob, "Report.pdf");
-
-    fetch(`https://34.197.212.64:8000/server/savePDF`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/pdf",
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return console.log("PDF saved successully");
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        localStorage.setItem("myData", JSON.stringify(data));
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      console.log("PDF saved successfully");
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
   const handleDownloadClick = () => {
     // 클라이언트가 서버에 있는 파일을 다운로드하도록 하는 로직
-    // fetch("http://127.0.0.1:8000/server/download")
-    fetch("https://34.197.212.64:8000/server/download")
+    // fetch("https://34.197.212.64:8000/server/download", {
+    const encodedFileName = encodeURIComponent(parsedData.nameData);
+    fetch(`http://127.0.0.1:8000/server/download?filename=${encodedFileName}`)
+      // fetch(`http://34.197.212.64:8000/server/download?filename=${encodedFileName}`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
@@ -278,7 +259,7 @@ const Result = () => {
                 {pdfViewer()}
                 {/* {savePDF()} */}
               </PDFViewer>
-              <S.download>
+              <S.download onClick={savePDF}>
                 <DonwloadPdf />
               </S.download>
             </>
