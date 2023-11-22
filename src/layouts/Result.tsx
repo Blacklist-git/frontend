@@ -680,7 +680,6 @@ const Result = () => {
               <S.download onClick={savePDF}>
                 <DonwloadPdf />
               </S.download>
-              <S.download onClick={handleCreateClick}>sdf</S.download>
             </>
           ) : (
             <>

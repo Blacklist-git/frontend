@@ -19,8 +19,10 @@ const Confirm = () => {
 
   const [nameArray, setNameArray] = useState<Data[]>([]);
   const [personalArray, setPersonalArray] = useState<Data[]>([]);
+  const [countArray, setCountArray] = useState<number[]>([]);
 
   useEffect(() => {
+    // nameArray 초기화
     if (
       parsedData &&
       parsedData.nameData &&
@@ -38,6 +40,8 @@ const Confirm = () => {
       }));
       setNameArray(initializedNameArray);
     }
+
+    // personalArray 초기화
     if (
       parsedData &&
       parsedData.personalData &&
@@ -55,22 +59,28 @@ const Confirm = () => {
       );
       setPersonalArray(initializedPersonalArray);
     }
-  }, []); // 두 번째 매개변수로 빈 배열을 전달
+  }, [parsedData]);
 
   useEffect(() => {
-    console.log("Rendered nameArray:", nameArray);
-  }, [nameArray]);
+    // personalArray가 변경될 때마다 countArray 초기화
+    const initialCountArray = personalArray.map(() => 0);
+    setCountArray(initialCountArray);
+  }, [personalArray]);
 
   const handleCheckBtnClick = (index: number, type: string) => {
     if (type === "name") {
       setNameArray((prevNameArray) => {
         const updatedNameArray = [...prevNameArray];
-        console.log("Before update:", updatedNameArray[index].isCorrect);
         if (updatedNameArray[index].isCorrect === "Correct") {
           return prevNameArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Incorrect" } : x,
           );
         } else if (updatedNameArray[index].isCorrect === "Incorrect") {
+          // 여기서 countArray 값을 조절해주기
+          const newCountArray = [...countArray];
+          newCountArray[index] -= 1;
+          setCountArray(newCountArray);
+
           return prevNameArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Correct" } : x,
           );
@@ -85,6 +95,11 @@ const Confirm = () => {
             i === index ? { ...x, isCorrect: "Incorrect" } : x,
           );
         } else if (updatedPersonalArray[index].isCorrect === "Incorrect") {
+          // 여기서 countArray 값을 조절해주기
+          const newCountArray = [...countArray];
+          newCountArray[index + countArray.length / 2] -= 1;
+          setCountArray(newCountArray);
+
           return prevPersonalArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Correct" } : x,
           );
@@ -115,12 +130,16 @@ const Confirm = () => {
     // personalData 갱신
     const updatedPersonalData = personalArray
       .map((personalData, index) => {
-        if (countArray[index + countArray.length / 2] > 0) {
+        console.log("dsfs", personalData);
+        console.log("Sdfsf", countArray[index]);
+        if (countArray[index] > 0) {
+          console.log("asdfsdfadsfasf");
           return personalData.data.replace(
             /갯수는 : (\d+)/,
             `갯수는 : ${countArray[index]}`,
           );
         }
+        console.log("설마");
         return null; // 추가된 부분
       })
       .filter(Boolean);
@@ -137,8 +156,8 @@ const Confirm = () => {
       grade: parsedData.grade,
     };
 
-    console.log(parsedData);
-    console.log(updatedData);
+    console.log("parsed : ", parsedData);
+    console.log("updated : ", updatedData);
     localStorage.setItem("myData", JSON.stringify(updatedData));
     navigate("/result");
   }
