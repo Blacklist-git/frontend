@@ -134,6 +134,7 @@ const Confirm = () => {
       option: parsedData.option,
       content: parsedData.content,
       count: countArray,
+      grade: parsedData.grade,
     };
 
     console.log(parsedData);

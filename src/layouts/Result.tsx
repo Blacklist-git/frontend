@@ -1,7 +1,9 @@
 //import Header from "../components/header/Header";
 import * as S from "./Result.style";
-import React from "react";
+import { useEffect } from "react";
+
 import reportImg from "../assets/img/reportImage.png";
+import exampleImg from "../assets/img/examplecode.png";
 import Header from "../components/header/Header";
 
 import ReactPDF, {
@@ -15,9 +17,11 @@ import ReactPDF, {
   PDFDownloadLink,
   PDFViewer,
   pdf,
+  Link,
 } from "@react-pdf/renderer";
 import { type } from "os";
 import { backgroundImage } from "html2canvas/dist/types/css/property-descriptors/background-image";
+import { parse } from "path";
 
 Font.register({
   family: "NanumGothic",
@@ -71,6 +75,9 @@ const styles = StyleSheet.create({
 });
 
 const Result = () => {
+  useEffect(() => {
+    handleCreateClick();
+  }, []);
   const data = localStorage.getItem("myData");
   console.log("data : " + data);
   const parsedData = data
@@ -85,47 +92,16 @@ const Result = () => {
   const formattedDate = `${date.getFullYear()}년 ${
     date.getMonth() + 1
   }월 ${date.getDate()}일`;
+  const primaryDate = `${date.getFullYear()}${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}${date.getDate().toString().padStart(2, "0")}${date
+    .getHours()
+    .toString()
+    .padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}`;
 
-  var result;
-  if (parsedData && parsedData.option === "website") {
-    const url = parsedData.url;
-    const nameCount = parsedData.nameData.length;
-    const nameData = parsedData.nameData;
-    const personalData = parsedData.personalData;
-    console.log("result " + parsedData);
-    result = (
-      <>
-        {nameCount > 0 ? (
-          <>
-            <Text>{"\n"}</Text>
-            이름으로 추정되는 것의 갯수 : {nameCount}
-            <Text>{"\n"}</Text>
-            <Text>이름 : </Text>
-            {Array.isArray(nameData)
-              ? nameData.map((name: any, index: any) => (
-                  <Text key={index}>{name}</Text>
-                ))
-              : ""}
-            {Array.isArray(personalData)
-              ? personalData.map((item: any, index: any) => (
-                  <Text key={index}>
-                    <Text>{"\n"}</Text>
-                    {item}
-                  </Text>
-                ))
-              : ""}
-            {"\n"}
-          </>
-        ) : null}
-      </>
-    );
-  } else if (parsedData && parsedData.option == "api") {
-    const content = "dfs";
-    result = <Text>{content}</Text>;
-  } else if (parsedData && parsedData.option == "csv") {
-    // console.log(url)
-  }
-  const content = result;
   const pdfViewer = () => (
     <Document>
       {/* 1번 */}
@@ -180,11 +156,11 @@ const Result = () => {
             id="title"
             style={{
               ...styles.text,
-              top: "80px",
+              top: "100px",
               textAlign: "left",
               fontWeight: "bold",
-              marginLeft: "60px",
-              fontSize: "23px",
+              marginLeft: "80px",
+              fontSize: "29px",
               fontFamily: "NanumGothicBold",
             }}
           >
@@ -192,32 +168,96 @@ const Result = () => {
           </Text>
           <hr
             style={{
-              border: "1.2px solid black",
-              width: "80%",
-              marginLeft: "60px",
+              border: "0.8px solid black",
+              width: "90%",
+              marginLeft: "80px",
               position: "absolute",
               // marginHorizontal: "auto",
-              top: "130px",
+              top: "170px",
             }}
           />
           <Text
             style={{
               ...styles.text,
-              top: "240px",
-              left: "70px",
-              fontSize: "15px",
+              top: "200px",
+              left: "80px",
+              fontSize: "18px",
               width: "400px",
               lineHeight: "3px",
             }}
           >
-            일시 : {formattedDate}
-            {"\n대상 url : " + parsedData.url}
-            {"\n탐지분야 : 웹사이트 검증"}
+            {parsedData.url.replace("https://", "")}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "300px",
+              left: "80px",
+              fontSize: "18px",
+              width: "400px",
+              lineHeight: "3px",
+            }}
+          >
+            일시 {"\n탐지분야 "}
+            {"\n보안등급 "}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "300px",
+              left: "250px",
+              fontSize: "18px",
+              width: "400px",
+              lineHeight: "3px",
+            }}
+          >
+            {formattedDate}
+            {"\n웹사이트 검증"}
+            {"\n"}
+            {parsedData.grade}
           </Text>
         </View>
       </Page>
-      {/* 3번 */}
-      <Page size="A4" style={{ ...styles.page, backgroundColor: "black" }}>
+      {/* 4번 */}
+      <Page size="A4" style={{ ...styles.page }}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={reportImg}
+          ></Image>
+          <Text
+            style={{
+              ...styles.text,
+              top: "100px",
+              textAlign: "center",
+              fontSize: "30px",
+            }}
+          >
+            BLACKLIST
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "220px",
+              left: "80px",
+              fontSize: "18px",
+              width: "400px",
+              lineHeight: "3px",
+            }}
+          >
+            {"1. 프로젝트 개요\n"}
+            {"2. 페이지 분석 결과\n"}
+            {"3. 개인정보 처리\n"}
+            {"4. 개인정보 가명화 처리 방침"}
+          </Text>
+        </View>
+      </Page>
+      {/* 5번 */}
+      <Page size="A4" style={{ ...styles.page }}>
         <View>
           <Image
             style={{
@@ -231,11 +271,11 @@ const Result = () => {
             id="title"
             style={{
               ...styles.text,
-              top: "80px",
+              top: "100px",
               textAlign: "left",
               fontWeight: "bold",
               marginLeft: "60px",
-              fontSize: "23px",
+              fontSize: "29px",
               fontFamily: "NanumGothicBold",
             }}
           >
@@ -243,18 +283,18 @@ const Result = () => {
           </Text>
           <hr
             style={{
-              border: "1.2px solid black",
-              width: "80%",
-              marginLeft: "60px",
+              border: "0.8px solid black",
+              width: "82%",
+              marginLeft: "55px",
               position: "absolute",
               // marginHorizontal: "auto",
-              top: "130px",
+              top: "170px",
             }}
           />
           <Text
             style={{
               ...styles.text,
-              top: "180px",
+              top: "210px",
               left: "60px",
               fontSize: "15px",
               width: "490px",
@@ -290,22 +330,247 @@ const Result = () => {
             src={reportImg}
           ></Image>
           <Text
+            id="title"
             style={{
               ...styles.text,
-              top: "120px",
-              left: "100px",
+              top: "80px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "60px",
+              fontSize: "29px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            분석 결과
+          </Text>
+          <hr
+            style={{
+              border: "0.8px solid black",
+              width: "82%",
+              marginLeft: "55px",
+              position: "absolute",
+              // marginHorizontal: "auto",
+              top: "150px",
+            }}
+          />
+          <Text
+            style={{
+              ...styles.text,
+              top: "180px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "60px",
               fontSize: "18px",
-              width: "400px",
+            }}
+          >
+            {parsedData.url.replace("https://", "")}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "240px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "140px",
+              fontSize: "20px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            구분
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "240px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "370px",
+              fontSize: "20px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            문제 개수
+          </Text>
+          <hr
+            style={{
+              border: "1.7px solid lightgrey",
+              width: "75%",
+              marginLeft: "80px",
+              position: "absolute",
+              // marginHorizontal: "auto",
+              top: "300px",
+            }}
+          />
+          <Text
+            style={{
+              ...styles.text,
+              top: "340px",
+              marginRight: "265px",
+              fontSize: "18px",
+              textAlign: "center",
+              lineHeight: "2.5px",
+            }}
+          >
+            {"이름\n"}
+            {Array.isArray(parsedData.personalData)
+              ? parsedData.personalData.map((item: any, index: any) => (
+                  <>
+                    {item.split(":")[0]}
+                    {"\n"}
+                  </>
+                ))
+              : ""}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "340px",
+              marginLeft: "230px",
+              fontSize: "18px",
+              textAlign: "center",
+              lineHeight: "2.5px",
+            }}
+          >
+            {parsedData.nameData.length}
+            {"\n"}
+            {Array.isArray(parsedData.personalData)
+              ? parsedData.personalData.map((item: any, index: any) => (
+                  <>
+                    {parsedData.count[index + parsedData.personalData.length]}
+                    {"\n"}
+                  </>
+                ))
+              : ""}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              top: "700px",
+              left: "400px",
+              fontSize: "15px",
               lineHeight: "1.8px",
             }}
           >
-            <Text>{content}</Text>
+            <Link src={link}>[검출된 정보 확인]</Link>
+          </Text>
+        </View>
+      </Page>
+      <Page size="A4" style={{ ...styles.page }}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={reportImg}
+          ></Image>
+          <Text
+            id="title"
+            style={{
+              ...styles.text,
+              top: "100px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "60px",
+              fontSize: "29px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            개인정보 처리
+          </Text>
+          <hr
+            style={{
+              border: "0.8px solid black",
+              width: "82%",
+              marginLeft: "55px",
+              position: "absolute",
+              // marginHorizontal: "auto",
+              top: "170px",
+            }}
+          />
+          <Text
+            style={{
+              ...styles.text,
+              top: "210px",
+              left: "60px",
+              fontSize: "15px",
+              width: "490px",
+              lineHeight: "1.5px",
+            }}
+          >
+            {
+              "  2020년 8월, 정부의 데이터 3법이 시행되면서 데이터 활용을 위한 가명정보 개념이 도입되며, 개인정보 또는 개인신용정보에 대하여 가명처리(비식별조치) 한 가명정보를 정보주체의 동의 없이 이용∙제공할 수 있습니다\n\n"
+            }
+            {
+              " Blacklist는 수집한 개인정보를 주체에게 제공하고, 가명화 처리 방법을 제공합니다. 수집한 개인정보는 보고서에 작성된 즉시 데이터를 삭제합니다. 개인정보를 상업적으로 이용하지 않음을 알려드립니다\n\n"
+            }
+            {
+              "개인의 존엄과 가치를 구현하기 위하여 2011년 개인정보 보호법이 제정ㆍ시행되었습니다. \n\n"
+            }
+          </Text>
+        </View>
+      </Page>
+      <Page size="A4" style={{ ...styles.page }}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={exampleImg}
+          ></Image>
+          <Text
+            id="title"
+            style={{
+              ...styles.text,
+              top: "100px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "60px",
+              fontSize: "29px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            개인정보 가명화
+          </Text>
+          <hr
+            style={{
+              border: "0.8px solid black",
+              width: "82%",
+              marginLeft: "55px",
+              position: "absolute",
+              // marginHorizontal: "auto",
+              top: "170px",
+            }}
+          />
+          <Text
+            style={{
+              ...styles.text,
+              top: "530px",
+              left: "60px",
+              fontSize: "15px",
+              width: "490px",
+              lineHeight: "1.5px",
+            }}
+          >
+            {
+              " 이 코드는 mask_names 함수를 사용하여 주어진 텍스트에서 각 이름을 찾아서 '*'로 마스킹 처리합니다.\n\n"
+            }
+            {
+              " 개인정보 검출 시에는 삭제를 우선시해야 하며, 가명화는 선택적으로 사용되어야 합니다. 가명화된 데이터 역시 보안에 취약할 수 있으므로 민감한 정보의 경우 적절한 안전성을 고려해야 합니다.\n\n"
+            }
+            {
+              " 개인정보 처리 가이드라인은 2020년 9월에 발표되었으며, 2021년 10월에 개정되었습니다. 가명처리 영역 전체 흐름도에 나오는 단계를 지키며 개인정보 가명화 처리가 이루어지는 것이 바람직합니다.\n\n"
+            }
           </Text>
         </View>
       </Page>
     </Document>
   );
 
+  const link = "http://127.0.0.1:8000/server/download_txt/" + primaryDate;
   const DonwloadPdf = () => (
     <PDFDownloadLink document={pdfViewer()} fileName="Report.pdf">
       {({ blob, url, loading, error }) =>
@@ -359,6 +624,41 @@ const Result = () => {
       })
       .catch((error) => console.error("Error:", error));
   };
+  const handleCreateClick = () => {
+    const nameCount = parsedData.nameData.length;
+    const nameData = parsedData.nameData;
+    const personalData = parsedData.personalData;
+    const data = `
+  ${nameCount > 0 ? `이름 : ${nameData.join(", ")}` : ""}
+  ${
+    personalData.length > 0
+      ? `개인정보 : ${personalData
+          .map((item: any, index: any) => `${item}`)
+          .join(", ")}`
+      : ""
+  }
+`;
+    console.log(primaryDate);
+    fetch("http://127.0.0.1:8000/server/create_file", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: data, file_name: primaryDate }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("File creation successful:", data);
+      })
+      .catch((error) => {
+        console.error("Error creating file:", error);
+      });
+  };
 
   return (
     <>
@@ -380,6 +680,7 @@ const Result = () => {
               <S.download onClick={savePDF}>
                 <DonwloadPdf />
               </S.download>
+              <S.download onClick={handleCreateClick}>sdf</S.download>
             </>
           ) : (
             <>
