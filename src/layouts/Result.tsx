@@ -3,7 +3,6 @@ import * as S from "./Result.style";
 import React from "react";
 import reportImg from "../assets/img/reportImage.png";
 import Header from "../components/header/Header";
-import streamToBlob from "../hook/streamToBlob";
 
 import ReactPDF, {
   Document,
@@ -18,10 +17,15 @@ import ReactPDF, {
   pdf,
 } from "@react-pdf/renderer";
 import { type } from "os";
+import { backgroundImage } from "html2canvas/dist/types/css/property-descriptors/background-image";
 
 Font.register({
   family: "NanumGothic",
   src: "https://fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.ttf",
+});
+Font.register({
+  family: "NanumGothicBold",
+  src: "https://fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.ttf",
 });
 interface ParsedData {
   option: string;
@@ -54,6 +58,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontFamily: "NanumGothic",
   },
+  subtitle: {
+    fontSize: 50,
+    left: "0px",
+    right: "0px",
+    color: "#000",
+    position: "absolute",
+    marginHorizontal: "auto",
+    justifyContent: "center",
+    fontFamily: "NanumGothic",
+  },
 });
 
 const Result = () => {
@@ -77,9 +91,6 @@ const Result = () => {
     const url = parsedData.url;
     const nameCount = parsedData.nameData.length;
     const nameData = parsedData.nameData;
-    const name = Array.isArray(nameData)
-      ? nameData.map((nameItem: string) => `${nameItem} `).join("")
-      : "";
     const personalData = parsedData.personalData;
     console.log("result " + parsedData);
     result = (
@@ -87,10 +98,14 @@ const Result = () => {
         {nameCount > 0 ? (
           <>
             <Text>{"\n"}</Text>
-            {url}에서 찾은 <Text>{"\n"}</Text>
             이름으로 추정되는 것의 갯수 : {nameCount}
             <Text>{"\n"}</Text>
-            이름으로 추정되는 것 : {name}
+            <Text>이름 : </Text>
+            {Array.isArray(nameData)
+              ? nameData.map((name: any, index: any) => (
+                  <Text key={index}>{name}</Text>
+                ))
+              : ""}
             {Array.isArray(personalData)
               ? personalData.map((item: any, index: any) => (
                   <Text key={index}>
@@ -113,6 +128,7 @@ const Result = () => {
   const content = result;
   const pdfViewer = () => (
     <Document>
+      {/* 1번 */}
       <Page size="A4" style={styles.page}>
         <View>
           <Image
@@ -127,25 +143,139 @@ const Result = () => {
             id="title"
             style={{
               ...styles.text,
-              top: "40px",
+              top: "260px",
               textAlign: "center",
-              fontSize: "30px",
+              fontSize: "60px",
+              fontWeight: "bold",
+              fontFamily: "NanumGothicBold",
             }}
           >
             BLACKLIST
           </Text>
           <Text
+            id="subtitle"
             style={{
               ...styles.text,
-              top: "120px",
-              left: "100px",
-              fontSize: "18px",
+              top: "350px",
+              textAlign: "center",
+              fontSize: "20px",
+            }}
+          >
+            개인정보 검출 보고서
+          </Text>
+        </View>
+      </Page>
+      {/* 2번 */}
+      <Page size="A4" style={{ ...styles.page, backgroundColor: "black" }}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={reportImg}
+          ></Image>
+          <Text
+            id="title"
+            style={{
+              ...styles.text,
+              top: "80px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "60px",
+              fontSize: "23px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            개인정보 검출 보고서
+          </Text>
+          <hr
+            style={{
+              border: "1.2px solid black",
+              width: "80%",
+              marginLeft: "60px",
+              position: "absolute",
+              // marginHorizontal: "auto",
+              top: "130px",
+            }}
+          />
+          <Text
+            style={{
+              ...styles.text,
+              top: "240px",
+              left: "70px",
+              fontSize: "15px",
               width: "400px",
-              lineHeight: "1.8px",
+              lineHeight: "3px",
             }}
           >
             일시 : {formattedDate}
-            <Text>{content}</Text>
+            {"\n대상 url : " + parsedData.url}
+            {"\n탐지분야 : 웹사이트 검증"}
+          </Text>
+        </View>
+      </Page>
+      {/* 3번 */}
+      <Page size="A4" style={{ ...styles.page, backgroundColor: "black" }}>
+        <View>
+          <Image
+            style={{
+              height: "99%",
+              width: "99%",
+              marginHorizontal: "auto",
+            }}
+            src={reportImg}
+          ></Image>
+          <Text
+            id="title"
+            style={{
+              ...styles.text,
+              top: "80px",
+              textAlign: "left",
+              fontWeight: "bold",
+              marginLeft: "60px",
+              fontSize: "23px",
+              fontFamily: "NanumGothicBold",
+            }}
+          >
+            프로젝트 개요
+          </Text>
+          <hr
+            style={{
+              border: "1.2px solid black",
+              width: "80%",
+              marginLeft: "60px",
+              position: "absolute",
+              // marginHorizontal: "auto",
+              top: "130px",
+            }}
+          />
+          <Text
+            style={{
+              ...styles.text,
+              top: "180px",
+              left: "60px",
+              fontSize: "15px",
+              width: "490px",
+              lineHeight: "1.5px",
+            }}
+          >
+            {
+              " 본 보고서의 내용을 인용할 때는 반드시 인용 가능한 데이터인지 확인하고, 가명화 처리가 되지 않은 데이터는 인용할 수 없음을 주의해야 합니다.\n\n"
+            }
+            {
+              "검출된 데이터는 정확하지 않을 수 있으며, 만일 개인정보가 검출되었다면 해당 URL에 검출되지 않은 개인정보가 있는지 확인하는 것이 필요합니다.\n\n"
+            }
+            {
+              "개인정보 검출 정도에 따라 심각도가 A, B, C, D 총 4단계로 나뉩니다. (D: 주의, C: 경고, B: 심각, A: 서버 중지)\n\n"
+            }
+            {
+              "개인정보 유출은 평판 손상, 수익 손실, 신뢰성 저하 등의 문제를 야기할 수 있습니다.\n\n"
+            }
+            {
+              "유출된 정보를 검출하여 개인 정보 처리의 중요성과 위험성을 논의하며, 동시에 완화 전략을 제시하고자 합니다."
+            }
           </Text>
         </View>
       </Page>
@@ -160,17 +290,6 @@ const Result = () => {
             src={reportImg}
           ></Image>
           <Text
-            id="title"
-            style={{
-              ...styles.text,
-              top: "40px",
-              textAlign: "center",
-              fontSize: "30px",
-            }}
-          >
-            BLACKLIST
-          </Text>
-          <Text
             style={{
               ...styles.text,
               top: "120px",
@@ -180,7 +299,6 @@ const Result = () => {
               lineHeight: "1.8px",
             }}
           >
-            일시 : {formattedDate}
             <Text>{content}</Text>
           </Text>
         </View>
@@ -265,9 +383,18 @@ const Result = () => {
             </>
           ) : (
             <>
-              <S.download onClick={handleDownloadClick}>
-                Download now!
-              </S.download>
+              <S.csv>
+                <S.title>Example</S.title>
+                <S.exampleBox>
+                  <p>
+                    홍길동 28세 남성 서울 마포구 01012232312 --{">"} 홍*동 20대
+                    남성 서울 거주 010*******2
+                  </p>
+                </S.exampleBox>
+                <S.download onClick={handleDownloadClick} color={"20%"}>
+                  Download now!
+                </S.download>
+              </S.csv>
             </>
           )}
         </S.container>

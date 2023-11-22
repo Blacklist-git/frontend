@@ -63,3 +63,8 @@ export const btns = styled.div`
   gap: 30px;
   margin-left: auto;
 `;
+
+export const name = styled.div`
+  color: white;
+  align-items: center;
+`;

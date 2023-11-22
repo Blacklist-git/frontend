@@ -1,29 +1,36 @@
 import * as S from "./Header.style";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserProvider, UserContext } from "../../hook/useContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const userData = useContext(UserContext);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // 토큰이 존재하면 로그인 상태로 설정
-      setLoggedIn(true);
+    const checkLoginStatus = async () => {
+      const isAuthenticated = !!localStorage.getItem("token");
 
-      // 여기에서 유저 정보를 가져와서 userName 설정
-      // 예: setUserName("유저이름");
-    }
-  }, []);
+      if (isAuthenticated && userData && userData.username) {
+        try {
+          setLoggedIn(true);
+          setUserName(userData.username);
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+        }
+      }
+    };
+
+    checkLoginStatus();
+  }, [userData]);
 
   const handleLogout = () => {
-    // 로그아웃 처리
     localStorage.removeItem("token");
     setLoggedIn(false);
-    setUserName(""); // 로그아웃 시 userName 초기화
-    navigate("/login");
+    setUserName("");
+    navigate("/");
   };
 
   return (
@@ -50,18 +57,31 @@ const Header = () => {
             </ul>
           </S.category>
         </S.nav>
-        <S.btns>
-          <Link to="/login">
-            <S.button backgroundColor="#b80103" color="white">
-              Login
+        {isLoggedIn ? (
+          <S.btns>
+            <S.button
+              onClick={handleLogout}
+              backgroundColor="#b80103"
+              color="white"
+            >
+              Logout
             </S.button>
-          </Link>
-          <Link to="/signup">
-            <S.button backgroundColor="white" color="black">
-              Sign up
-            </S.button>
-          </Link>
-        </S.btns>
+            <S.name>{userName}님</S.name>
+          </S.btns>
+        ) : (
+          <S.btns>
+            <Link to="/login">
+              <S.button backgroundColor="#b80103" color="white">
+                Login
+              </S.button>
+            </Link>
+            <Link to="/signup">
+              <S.button backgroundColor="white" color="black">
+                Sign up
+              </S.button>
+            </Link>
+          </S.btns>
+        )}
       </S.header>
     </div>
   );

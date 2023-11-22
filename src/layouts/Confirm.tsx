@@ -26,9 +26,9 @@ const Confirm = () => {
       parsedData.nameData &&
       typeof parsedData.nameData === "string"
     ) {
-      const nameData = parsedData.nameData.split(",");
+      const nameData = parsedData.nameData;
       console.log(nameData);
-      const names = nameData[3]
+      const names = nameData
         .split(" ")
         .filter((name: string) => name.trim() !== "");
       console.log(names);
@@ -36,7 +36,6 @@ const Confirm = () => {
         data: name,
         isCorrect: "Correct",
       }));
-      console.log(initializedNameArray);
       setNameArray(initializedNameArray);
     }
     if (
@@ -54,7 +53,6 @@ const Confirm = () => {
           isCorrect: "Correct",
         }),
       );
-      console.log(initializedPersonalArray);
       setPersonalArray(initializedPersonalArray);
     }
   }, []); // 두 번째 매개변수로 빈 배열을 전달
@@ -77,13 +75,11 @@ const Confirm = () => {
             i === index ? { ...x, isCorrect: "Correct" } : x,
           );
         }
-        console.log("After update:", updatedNameArray[index].isCorrect);
         return updatedNameArray;
       });
     } else if (type === "personal") {
       setPersonalArray((prevPersonalArray) => {
         const updatedPersonalArray = [...prevPersonalArray];
-        console.log("Before update:", updatedPersonalArray[index].isCorrect);
         if (updatedPersonalArray[index].isCorrect === "Correct") {
           return prevPersonalArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Incorrect" } : x,
@@ -93,7 +89,6 @@ const Confirm = () => {
             i === index ? { ...x, isCorrect: "Correct" } : x,
           );
         }
-        console.log("After update:", updatedPersonalArray[index].isCorrect);
         return updatedPersonalArray;
       });
     }
@@ -120,13 +115,13 @@ const Confirm = () => {
     // personalData 갱신
     const updatedPersonalData = personalArray
       .map((personalData, index) => {
-        return (
-          countArray[index] != 0 &&
-          personalData.data.replace(
+        if (countArray[index + countArray.length / 2] > 0) {
+          return personalData.data.replace(
             /갯수는 : (\d+)/,
             `갯수는 : ${countArray[index]}`,
-          )
-        );
+          );
+        }
+        return null; // 추가된 부분
       })
       .filter(Boolean);
 
@@ -138,6 +133,7 @@ const Confirm = () => {
       url: parsedData.url,
       option: parsedData.option,
       content: parsedData.content,
+      count: countArray,
     };
 
     console.log(parsedData);

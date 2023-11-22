@@ -11,7 +11,7 @@ const Mypage = () => {
   const [open, setOpen] = useState(false);
   const isAuthenticated = !!localStorage.getItem("token");
   const token = localStorage.getItem("token");
-  console.log(token);
+  console.log("token :", token);
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }

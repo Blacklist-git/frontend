@@ -1,9 +1,11 @@
+// UserContext.tsx
 import React, {
   createContext,
   useContext,
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from "react";
 
 interface UserContextProps {
@@ -11,43 +13,57 @@ interface UserContextProps {
 }
 
 interface UserData {
-  name: string;
+  username: string;
   id: string;
 }
 
 const UserContext = createContext<UserData | null>(null);
 
-export const UserProvider: React.FC<UserContextProps> = ({ children }) => {
+const UserProvider: React.FC<UserContextProps> = ({ children }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const fetchUserInfo = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-    if (token) {
-      // 서버에 사용자 정보를 가져오는 API 요청
-      fetch("서버_API_URL/user", {
+      if (!token) {
+        return;
+      }
+
+      const response = await fetch("http://127.0.0.1:8000/server/user/info", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-        .then((response) => response.json())
-        .then((data) => setUserData(data))
-        .catch((error) => console.error("Error fetching user data:", error));
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user info");
+      }
+
+      const userInfo = await response.json();
+      console.log("userInfo : " + userInfo.username);
+      setUserData(userInfo);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
     }
   }, []);
+
+  useEffect(() => {
+    const isAuthenticated = !!localStorage.getItem("token");
+
+    if (isAuthenticated) {
+      fetchUserInfo();
+    }
+  }, [fetchUserInfo]);
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
 
   return (
     <UserContext.Provider value={userData}>{children}</UserContext.Provider>
   );
 };
 
-export const useUser = () => {
-  const context = useContext(UserContext);
-
-  if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
-  }
-
-  return context;
-};
+export { UserProvider, UserContext };

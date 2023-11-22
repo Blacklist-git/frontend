@@ -137,7 +137,7 @@ const Check = () => {
           <S.InputBtn>
             <S.Select value={selectedOption} onChange={handleSelectChange}>
               <option value="website">웹사이트 검증</option>
-              <option value="api">API 분석</option>
+              {/* <option value="api">API 분석</option> */}
               <option value="csv">csv파일 처리</option>
             </S.Select>
           </S.InputBtn>

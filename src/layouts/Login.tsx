@@ -35,7 +35,6 @@ const Login = () => {
       pwSend: pw,
     };
 
-    console.log(dataToSend);
     // fetch(`https://34.197.212.64:8000/server/login`, {
     fetch(`http://127.0.0.1:8000/server/login`, {
       method: "POST",
