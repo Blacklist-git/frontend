@@ -11,6 +11,7 @@ const Confirm = () => {
   const parsedData = data
     ? JSON.parse(data)
     : console.log("Data not found in localStorage");
+  console.log("dkfslfjlksdf : ", parsedData);
 
   interface Data {
     data: string;
@@ -19,10 +20,36 @@ const Confirm = () => {
 
   const [nameArray, setNameArray] = useState<Data[]>([]);
   const [personalArray, setPersonalArray] = useState<Data[]>([]);
-  const [countArray, setCountArray] = useState<number[]>([]);
+  useEffect(() => {
+    console.log("nameArray:", nameArray);
+  }, [nameArray]);
 
   useEffect(() => {
-    // nameArray 초기화
+    console.log("personalArray:", personalArray);
+  }, [personalArray]);
+  useEffect(() => {
+    if (
+      parsedData &&
+      parsedData.personalData &&
+      typeof parsedData.personalData === "string" // 여기서 nameData가 아니라 personalData로 수정
+    ) {
+      const personalData = parsedData.personalData
+        .split(",")
+        .filter((name: string) => name.trim() !== "");
+      console.log(personalData);
+      const initializedPersonalArray = personalData.map(
+        (personalData: string) => ({
+          data: personalData,
+          isCorrect: "Correct",
+        }),
+      );
+      setPersonalArray(initializedPersonalArray);
+    } else {
+      console.error("Invalid personalData format");
+    }
+  }, []);
+
+  useEffect(() => {
     if (
       parsedData &&
       parsedData.nameData &&
@@ -40,47 +67,22 @@ const Confirm = () => {
       }));
       setNameArray(initializedNameArray);
     }
-
-    // personalArray 초기화
-    if (
-      parsedData &&
-      parsedData.personalData &&
-      typeof parsedData.nameData === "string"
-    ) {
-      const personalData = parsedData.personalData
-        .split(",")
-        .filter((name: string) => name.trim() !== "");
-      console.log(personalData);
-      const initializedPersonalArray = personalData.map(
-        (personalData: string) => ({
-          data: personalData,
-          isCorrect: "Correct",
-        }),
-      );
-      setPersonalArray(initializedPersonalArray);
-    }
-  }, [parsedData]);
+  }, []); // 두 번째 매개변수로 빈 배열을 전달
 
   useEffect(() => {
-    // personalArray가 변경될 때마다 countArray 초기화
-    const initialCountArray = personalArray.map(() => 0);
-    setCountArray(initialCountArray);
-  }, [personalArray]);
+    console.log("Rendered nameArray:", nameArray);
+  }, [nameArray]);
 
   const handleCheckBtnClick = (index: number, type: string) => {
     if (type === "name") {
       setNameArray((prevNameArray) => {
         const updatedNameArray = [...prevNameArray];
+        console.log("Before update:", updatedNameArray[index].isCorrect);
         if (updatedNameArray[index].isCorrect === "Correct") {
           return prevNameArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Incorrect" } : x,
           );
         } else if (updatedNameArray[index].isCorrect === "Incorrect") {
-          // 여기서 countArray 값을 조절해주기
-          const newCountArray = [...countArray];
-          newCountArray[index] -= 1;
-          setCountArray(newCountArray);
-
           return prevNameArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Correct" } : x,
           );
@@ -95,11 +97,6 @@ const Confirm = () => {
             i === index ? { ...x, isCorrect: "Incorrect" } : x,
           );
         } else if (updatedPersonalArray[index].isCorrect === "Incorrect") {
-          // 여기서 countArray 값을 조절해주기
-          const newCountArray = [...countArray];
-          newCountArray[index + countArray.length / 2] -= 1;
-          setCountArray(newCountArray);
-
           return prevPersonalArray.map((x, i) =>
             i === index ? { ...x, isCorrect: "Correct" } : x,
           );
@@ -161,7 +158,6 @@ const Confirm = () => {
     localStorage.setItem("myData", JSON.stringify(updatedData));
     navigate("/result");
   }
-
   const result = (
     <>
       {nameArray.length > 0 && (

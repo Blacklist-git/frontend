@@ -629,9 +629,13 @@ const Result = () => {
     const nameData = parsedData.nameData;
     const personalData = parsedData.personalData;
     const data = `
-  ${nameCount > 0 ? `이름 : ${nameData.join(", ")}` : ""}
   ${
-    personalData.length > 0
+    Array.isArray(nameData) && nameData.length > 0
+      ? `이름 : ${nameData.join(", ")}`
+      : ""
+  }
+  ${
+    Array.isArray(personalData) && personalData.length > 0
       ? `개인정보 : ${personalData
           .map((item: any, index: any) => `${item}`)
           .join(", ")}`
